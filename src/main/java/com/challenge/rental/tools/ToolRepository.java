@@ -6,6 +6,7 @@ import java.util.Map;
 
 @Service
 public class ToolRepository {
+    // This class would be a front for a DB in a real system. Here I'm mocking it out using a map for simplicity
 
     public static final String CHNS = "CHNS";
     public static final String LADW = "LADW";

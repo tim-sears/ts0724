@@ -30,7 +30,7 @@ class RentalAgreementGeneratorTest {
     }
 
     @Test
-    public void test_JAKR_20150903_5days_101discount() {
+    public void JAKR_20150903_5days_101discount() {
         String toolCode = "JAKR";
         LocalDate checkoutDate = LocalDate.parse("2015-09-03");
         int rentalDurationDays = 5;
@@ -46,20 +46,6 @@ class RentalAgreementGeneratorTest {
 
     @Test
     public void LADW_20200702_3days_10discount() {
-        String expectedOutputString = """
-                Tool code: LADW
-                Tool type: Ladder
-                Tool brand: Werner
-                Rental days: 3
-                Check out date: 2020/07/02
-                Due date: 2020/07/05
-                Daily rental charge: $1.99
-                Charge days: 3
-                Pre-discount charge: $5.97
-                Discount percent; 10%
-                Discount amount: $0.60
-                Final charge: $5.37""";
-
         String toolCode = "LADW";
         LocalDate checkoutDate = LocalDate.parse("2020-07-02");
         int rentalDurationDays = 3;
@@ -71,13 +57,121 @@ class RentalAgreementGeneratorTest {
                 .brand("Werner")
                 .rentalDurationDays(rentalDurationDays)
                 .checkoutDate(checkoutDate)
-                .dueDate(checkoutDate.plusDays(3))
+                .dueDate(checkoutDate.plusDays(rentalDurationDays))
                 .dailyRentalCharge(ToolType.LADDER.getDailyCharge())
-                .chargeDays(rentalDurationDays) // TODO fix this to account for holidays!
-                .preDiscountCharge(BigDecimal.valueOf(5.97))
+                .chargeDays(2)
+                .preDiscountCharge(BigDecimal.valueOf(3.98))
                 .discountPercent(10)
-                .discountAmount(BigDecimal.valueOf(0.6).setScale(2, RoundingMode.HALF_UP)) // TODO fix this to account for holidays!
-                .finalCharge(BigDecimal.valueOf(5.37)) // TODO fix this to account for holidays!
+                .discountAmount(BigDecimal.valueOf(0.4).setScale(2, RoundingMode.HALF_UP))
+                .finalCharge(BigDecimal.valueOf(3.58))
+                .build();
+
+        RentalAgreement rentalAgreement = rentalAgreementGenerator.generate(toolCode, checkoutDate, rentalDurationDays, discountPercentage);
+
+        assertEquals(expectedOutput, rentalAgreement);
+    }
+
+    @Test
+    public void CHNS_20150702_5days_25discount() {
+        String toolCode = "CHNS";
+        LocalDate checkoutDate = LocalDate.parse("2015-07-02");
+        int rentalDurationDays = 5;
+        int discountPercentage = 25;
+
+        RentalAgreement expectedOutput = RentalAgreement.builder()
+                .toolCode(toolCode)
+                .toolType(ToolType.CHAINSAW)
+                .brand("Stihl")
+                .rentalDurationDays(rentalDurationDays)
+                .checkoutDate(checkoutDate)
+                .dueDate(checkoutDate.plusDays(rentalDurationDays))
+                .dailyRentalCharge(ToolType.CHAINSAW.getDailyCharge())
+                .chargeDays(3)
+                .preDiscountCharge(BigDecimal.valueOf(4.47))
+                .discountPercent(25)
+                .discountAmount(BigDecimal.valueOf(1.12).setScale(2, RoundingMode.HALF_UP))
+                .finalCharge(BigDecimal.valueOf(3.35))
+                .build();
+
+        RentalAgreement rentalAgreement = rentalAgreementGenerator.generate(toolCode, checkoutDate, rentalDurationDays, discountPercentage);
+
+        assertEquals(expectedOutput, rentalAgreement);
+    }
+
+    @Test
+    public void JAKD_20150903_6days_0discount() {
+        String toolCode = "JAKD";
+        LocalDate checkoutDate = LocalDate.parse("2015-09-03");
+        int rentalDurationDays = 6;
+        int discountPercentage = 0;
+
+        RentalAgreement expectedOutput = RentalAgreement.builder()
+                .toolCode(toolCode)
+                .toolType(ToolType.JACKHAMMER)
+                .brand("DeWalt")
+                .rentalDurationDays(rentalDurationDays)
+                .checkoutDate(checkoutDate)
+                .dueDate(checkoutDate.plusDays(rentalDurationDays))
+                .dailyRentalCharge(ToolType.JACKHAMMER.getDailyCharge())
+                .chargeDays(3)
+                .preDiscountCharge(BigDecimal.valueOf(8.97))
+                .discountPercent(0)
+                .discountAmount(BigDecimal.valueOf(0).setScale(2, RoundingMode.HALF_UP))
+                .finalCharge(BigDecimal.valueOf(8.97))
+                .build();
+
+        RentalAgreement rentalAgreement = rentalAgreementGenerator.generate(toolCode, checkoutDate, rentalDurationDays, discountPercentage);
+
+        assertEquals(expectedOutput, rentalAgreement);
+    }
+
+    @Test
+    public void JAKR_20150702_9days_0discount() {
+        String toolCode = "JAKR";
+        LocalDate checkoutDate = LocalDate.parse("2015-07-02");
+        int rentalDurationDays = 9;
+        int discountPercentage = 0;
+
+        RentalAgreement expectedOutput = RentalAgreement.builder()
+                .toolCode(toolCode)
+                .toolType(ToolType.JACKHAMMER)
+                .brand("Rigid")
+                .rentalDurationDays(rentalDurationDays)
+                .checkoutDate(checkoutDate)
+                .dueDate(checkoutDate.plusDays(rentalDurationDays))
+                .dailyRentalCharge(ToolType.JACKHAMMER.getDailyCharge())
+                .chargeDays(5)
+                .preDiscountCharge(BigDecimal.valueOf(14.95))
+                .discountPercent(0)
+                .discountAmount(BigDecimal.valueOf(0).setScale(2, RoundingMode.HALF_UP))
+                .finalCharge(BigDecimal.valueOf(14.95))
+                .build();
+
+        RentalAgreement rentalAgreement = rentalAgreementGenerator.generate(toolCode, checkoutDate, rentalDurationDays, discountPercentage);
+
+        assertEquals(expectedOutput, rentalAgreement);
+    }
+
+    @Test
+    public void JAKR_20200702_4days_50discount() {
+        String toolCode = "JAKR";
+        LocalDate checkoutDate = LocalDate.parse("2020-07-02");
+        int rentalDurationDays = 4;
+        int discountPercentage = 50;
+
+        RentalAgreement expectedOutput = RentalAgreement.builder()
+                .toolCode(toolCode)
+                .toolType(ToolType.JACKHAMMER)
+                .brand("Rigid")
+                .rentalDurationDays(rentalDurationDays)
+                .checkoutDate(checkoutDate)
+                .dueDate(checkoutDate.plusDays(rentalDurationDays))
+                .dailyRentalCharge(ToolType.JACKHAMMER.getDailyCharge())
+                .chargeDays(1)
+                .preDiscountCharge(BigDecimal.valueOf(2.99))
+                .discountPercent(50)
+                .discountAmount(BigDecimal.valueOf(1.50).setScale(2, RoundingMode.HALF_UP))
+                .finalCharge(BigDecimal.valueOf(1.49))
                 .build();
 
         RentalAgreement rentalAgreement = rentalAgreementGenerator.generate(toolCode, checkoutDate, rentalDurationDays, discountPercentage);
