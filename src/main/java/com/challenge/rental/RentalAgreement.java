@@ -26,7 +26,7 @@ public class RentalAgreement {
     private BigDecimal finalCharge;
 
     public String toConsolePrintable() {
-        String consolePrintable =String.join("\n"
+        return String.join("\n"
                 ,"Tool code: " + toolCode
                 ,"Tool type: " + toolType
                 ,"Tool brand: " + brand
@@ -40,7 +40,5 @@ public class RentalAgreement {
                 ,"Discount amount: $" + discountAmount
                 ,"Final charge: $" + finalCharge.toPlainString()
                 );
-
-        return consolePrintable;
     }
 }
