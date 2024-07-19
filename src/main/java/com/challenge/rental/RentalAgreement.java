@@ -24,4 +24,23 @@ public class RentalAgreement {
     private int discountPercent;
     private BigDecimal discountAmount;
     private BigDecimal finalCharge;
+
+    public String toConsolePrintable() {
+        String consolePrintable =String.join("\n"
+                ,"Tool code: " + toolCode
+                ,"Tool type: " + toolType
+                ,"Tool brand: " + brand
+                ,"Rental days: " + rentalDurationDays
+                ,"Check out date: " + checkoutDate
+                ,"Due date: " + dueDate
+                ,"Daily rental charge: $" + dailyRentalCharge.toPlainString()
+                ,"Charge days: " + chargeDays
+                ,"Pre-discount charge: $" + preDiscountCharge.toPlainString()
+                ,"Discount percent; " + discountPercent + "%"
+                ,"Discount amount: $" + discountAmount
+                ,"Final charge: $" + finalCharge.toPlainString()
+                );
+
+        return consolePrintable;
+    }
 }

@@ -51,7 +51,7 @@ public class RentalAgreementGenerator {
                 .multiply(BigDecimal.valueOf(discountPercentage / 100.0)).setScale(2, RoundingMode.HALF_UP);
         BigDecimal finalAmount = preDiscountCharge.subtract(discountAmount).setScale(2, RoundingMode.HALF_UP);
 
-        return RentalAgreement.builder()
+        RentalAgreement rentalAgreement = RentalAgreement.builder()
                 .toolCode(toolCode)
                 .toolType(tool.getToolType())
                 .brand(tool.getBrand())
@@ -65,5 +65,8 @@ public class RentalAgreementGenerator {
                 .discountAmount(discountAmount)
                 .finalCharge(finalAmount)
                 .build();
+
+        log.info("Resulting rentalAgreement: \n" + rentalAgreement.toConsolePrintable());
+        return rentalAgreement;
     }
 }
