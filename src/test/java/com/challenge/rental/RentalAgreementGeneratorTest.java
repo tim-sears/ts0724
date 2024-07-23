@@ -1,5 +1,7 @@
 package com.challenge.rental;
 
+import com.challenge.rental.eception.InvalidDiscountAmountException;
+import com.challenge.rental.eception.InvalidRentalDurationException;
 import com.challenge.rental.tools.ToolRepository;
 import com.challenge.rental.tools.ToolType;
 import org.junit.jupiter.api.Test;
@@ -8,7 +10,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RentalAgreementGeneratorTest {
 
@@ -21,8 +24,8 @@ class RentalAgreementGeneratorTest {
         int rentalDurationDays = 0;
         int discountPercentage = 50;
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        InvalidRentalDurationException exception = assertThrows(
+                InvalidRentalDurationException.class,
                 () -> rentalAgreementGenerator.generate(toolCode, checkoutDate, rentalDurationDays, discountPercentage),
                 "Rental duration of 0 days makes no sense!");
 
@@ -36,8 +39,8 @@ class RentalAgreementGeneratorTest {
         int rentalDurationDays = 5;
         int discountPercentage = 101;
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        InvalidDiscountAmountException exception = assertThrows(
+                InvalidDiscountAmountException.class,
                 () -> rentalAgreementGenerator.generate(toolCode, checkoutDate, rentalDurationDays, discountPercentage),
                 "Discount above 100% should not be allowed!");
 

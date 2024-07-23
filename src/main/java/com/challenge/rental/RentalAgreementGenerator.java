@@ -1,6 +1,8 @@
 package com.challenge.rental;
 
 import com.challenge.rental.days.DaysTypeCounter;
+import com.challenge.rental.eception.InvalidDiscountAmountException;
+import com.challenge.rental.eception.InvalidRentalDurationException;
 import com.challenge.rental.tools.Tool;
 import com.challenge.rental.tools.ToolRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -14,15 +16,24 @@ import java.time.LocalDate;
 @Slf4j
 public class RentalAgreementGenerator {
 
+    public static final String DISCOUNT_CANNOT_EXCEED_100 = "Discount cannot exceed 100%";
+    public static final String NUMBER_OF_DAYS_FOR_RENTAL_PERIOD_MUST_BE_1 = "Number of days for rental period must be >= 1";
     private final ToolRepository toolRepository;
 
     public RentalAgreementGenerator(ToolRepository toolRepository) {
         this.toolRepository = toolRepository;
     }
 
+    public RentalAgreement generate(RentalAgreementRequest rentalAgreementRequest) {
+        return this.generate(rentalAgreementRequest.getToolCode(),
+                rentalAgreementRequest.getCheckoutDate(),
+                rentalAgreementRequest.getRentalDurationDays(),
+                rentalAgreementRequest.getDiscountPercentage());
+    }
+
     public RentalAgreement generate(String toolCode, LocalDate checkoutDate, int rentalDurationDays, int discountPercentage) {
-        if(rentalDurationDays < 1) throw new IllegalArgumentException("Number of days for rental period must be >= 1");
-        if(discountPercentage > 100) throw new IllegalArgumentException("Discount cannot exceed 100%");
+        if(rentalDurationDays < 1) throw new InvalidRentalDurationException(NUMBER_OF_DAYS_FOR_RENTAL_PERIOD_MUST_BE_1);
+        if(discountPercentage > 100) throw new InvalidDiscountAmountException(DISCOUNT_CANNOT_EXCEED_100);
 
         log.info("Generating rental agreement for: toolCode={}, checkoutDate={}, rentalDurationDays={}, discountPercentage={}",
                 toolCode, checkoutDate, rentalDurationDays, discountPercentage);
