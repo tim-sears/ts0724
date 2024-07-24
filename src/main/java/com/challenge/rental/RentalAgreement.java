@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -18,12 +17,12 @@ public class RentalAgreement {
     private int rentalDurationDays;
     private LocalDate checkoutDate;
     private LocalDate dueDate;
-    private BigDecimal dailyRentalCharge;
+    private String dailyRentalCharge;
     private int chargeDays;
-    private BigDecimal preDiscountCharge;
+    private String preDiscountCharge;
     private int discountPercent;
-    private BigDecimal discountAmount;
-    private BigDecimal finalCharge;
+    private String discountAmount;
+    private String finalCharge;
 
     public String toConsolePrintable() {
         return String.join("\n"
@@ -33,12 +32,12 @@ public class RentalAgreement {
                 ,"Rental days: " + rentalDurationDays
                 ,"Check out date: " + checkoutDate
                 ,"Due date: " + dueDate
-                ,"Daily rental charge: $" + dailyRentalCharge.toPlainString()
+                ,"Daily rental charge: " + dailyRentalCharge
                 ,"Charge days: " + chargeDays
-                ,"Pre-discount charge: $" + preDiscountCharge.toPlainString()
+                ,"Pre-discount charge: " + preDiscountCharge
                 ,"Discount percent; " + discountPercent + "%"
-                ,"Discount amount: $" + discountAmount
-                ,"Final charge: $" + finalCharge.toPlainString()
+                ,"Discount amount: " + discountAmount
+                ,"Final charge: " + finalCharge
                 );
     }
 }

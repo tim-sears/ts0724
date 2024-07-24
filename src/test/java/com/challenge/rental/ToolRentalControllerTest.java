@@ -1,7 +1,7 @@
 package com.challenge.rental;
 
-import com.challenge.rental.eception.InvalidDiscountAmountException;
-import com.challenge.rental.eception.InvalidRentalDurationException;
+import com.challenge.rental.exception.InvalidDiscountAmountException;
+import com.challenge.rental.exception.InvalidRentalDurationException;
 import com.challenge.rental.tools.ToolType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -89,12 +90,12 @@ class ToolRentalControllerTest {
                 .rentalDurationDays(rentalDurationDays)
                 .checkoutDate(checkoutDate)
                 .dueDate(checkoutDate.plusDays(rentalDurationDays))
-                .dailyRentalCharge(ToolType.LADDER.getDailyCharge())
+                .dailyRentalCharge(DecimalFormat.getCurrencyInstance().format(ToolType.LADDER.getDailyCharge()))
                 .chargeDays(2)
-                .preDiscountCharge(BigDecimal.valueOf(3.98))
+                .preDiscountCharge(DecimalFormat.getCurrencyInstance().format(BigDecimal.valueOf(3.98)))
                 .discountPercent(10)
-                .discountAmount(BigDecimal.valueOf(0.4).setScale(2, RoundingMode.HALF_UP))
-                .finalCharge(BigDecimal.valueOf(3.58))
+                .discountAmount(DecimalFormat.getCurrencyInstance().format(BigDecimal.valueOf(0.4).setScale(2, RoundingMode.HALF_UP)))
+                .finalCharge(DecimalFormat.getCurrencyInstance().format(BigDecimal.valueOf(3.58)))
                 .build();
 
         RentalAgreementRequest rentalAgreementRequest = RentalAgreementRequest.builder()

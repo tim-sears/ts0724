@@ -1,8 +1,8 @@
 package com.challenge.rental;
 
 import com.challenge.rental.days.DaysTypeCounter;
-import com.challenge.rental.eception.InvalidDiscountAmountException;
-import com.challenge.rental.eception.InvalidRentalDurationException;
+import com.challenge.rental.exception.InvalidDiscountAmountException;
+import com.challenge.rental.exception.InvalidRentalDurationException;
 import com.challenge.rental.tools.Tool;
 import com.challenge.rental.tools.ToolRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Service
@@ -69,12 +70,12 @@ public class RentalAgreementGenerator {
                 .rentalDurationDays(rentalDurationDays)
                 .checkoutDate(checkoutDate)
                 .dueDate(checkoutDate.plusDays(rentalDurationDays))
-                .dailyRentalCharge(tool.getToolType().getDailyCharge())
+                .dailyRentalCharge(DecimalFormat.getCurrencyInstance().format(tool.getToolType().getDailyCharge()))
                 .chargeDays(chargeDays)
-                .preDiscountCharge(preDiscountCharge)
+                .preDiscountCharge(DecimalFormat.getCurrencyInstance().format(preDiscountCharge))
                 .discountPercent(discountPercentage)
-                .discountAmount(discountAmount)
-                .finalCharge(finalAmount)
+                .discountAmount(DecimalFormat.getCurrencyInstance().format(discountAmount))
+                .finalCharge(DecimalFormat.getCurrencyInstance().format(finalAmount))
                 .build();
 
         log.info("Resulting rentalAgreement: \n" + rentalAgreement.toConsolePrintable());
