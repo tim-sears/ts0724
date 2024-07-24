@@ -1,5 +1,7 @@
 package com.challenge.rental;
 
+import com.challenge.rental.eception.InvalidDiscountAmountException;
+import com.challenge.rental.eception.InvalidRentalDurationException;
 import com.challenge.rental.tools.ToolType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 
-import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -42,14 +44,15 @@ class ToolRentalControllerTest {
                 .discountPercentage(0)
                 .build();
         when(rentalAgreementGenerator.generate(rentalAgreementRequest))
-                .thenThrow(new IllegalArgumentException(RentalAgreementGenerator.NUMBER_OF_DAYS_FOR_RENTAL_PERIOD_MUST_BE_1));
+                .thenThrow(new InvalidRentalDurationException(RentalAgreementGenerator.NUMBER_OF_DAYS_FOR_RENTAL_PERIOD_MUST_BE_1));
 
         this.mockMvc.perform(post("/rental-agreements")
-                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rentalAgreementRequest)))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content()
-                        .string(containsString(RentalAgreementGenerator.NUMBER_OF_DAYS_FOR_RENTAL_PERIOD_MUST_BE_1)));
+                .andExpect(result -> assertInstanceOf(InvalidRentalDurationException.class, result.getResolvedException()))
+                .andExpect(result -> assertEquals(RentalAgreementGenerator.NUMBER_OF_DAYS_FOR_RENTAL_PERIOD_MUST_BE_1,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -61,14 +64,15 @@ class ToolRentalControllerTest {
                 .discountPercentage(101)
                 .build();
         when(rentalAgreementGenerator.generate(rentalAgreementRequest))
-                .thenThrow(new IllegalArgumentException(RentalAgreementGenerator.DISCOUNT_CANNOT_EXCEED_100));
+                .thenThrow(new InvalidDiscountAmountException(RentalAgreementGenerator.DISCOUNT_CANNOT_EXCEED_100));
 
         this.mockMvc.perform(post("/rental-agreements")
-                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rentalAgreementRequest)))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content()
-                        .string(containsString(RentalAgreementGenerator.DISCOUNT_CANNOT_EXCEED_100)));
+                .andExpect(result -> assertInstanceOf(InvalidDiscountAmountException.class, result.getResolvedException()))
+                .andExpect(result -> assertEquals(RentalAgreementGenerator.DISCOUNT_CANNOT_EXCEED_100,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -103,7 +107,7 @@ class ToolRentalControllerTest {
                 .thenReturn(expectedOutput);
 
         this.mockMvc.perform(post("/rental-agreements")
-                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(rentalAgreementRequest)))
                 .andExpect(status().isOk())
                 .andExpect(content()
