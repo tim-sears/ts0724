@@ -31,11 +31,11 @@ The Response takes the following form:
   "rentalDurationDays":5,
   "checkoutDate":"2024-07-18",
   "dueDate":"2024-07-23",
-  "dailyRentalCharge":2.99,
+  "dailyRentalCharge": "$2.99",
   "chargeDays":3,
-  "preDiscountCharge":8.97,
+  "preDiscountCharge": "$8.97",
   "discountPercent":20,
-  "discountAmount":1.79,
-  "finalCharge":7.18
+  "discountAmount": "$1.79",
+  "finalCharge": "$7.18"
 }
 ```
